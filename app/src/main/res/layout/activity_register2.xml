@@ -52,6 +52,7 @@
                 android:layout_height="wrap_content"
                 >
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/textInputUsername"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Nombre de usuario"
@@ -78,11 +79,14 @@
                 android:layout_height="wrap_content"
                 >
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/textInputEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Correo electronico"
                     android:inputType="textEmailAddress"
                     android:background="@color/trans"
+                    android:layout_marginTop="10dp"
+
                     />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -104,6 +108,7 @@
                 android:layout_height="wrap_content"
                 >
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/textInputPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
@@ -132,6 +137,7 @@
                 android:layout_height="wrap_content"
                 >
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/textInputConfirmPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
@@ -145,6 +151,7 @@
         </LinearLayout>
 
         <Button
+            android:id="@+id/btnRegister"
             style="@style/Widget.AppCompat.Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -153,8 +160,16 @@
             android:textColor="@color/white"
             android:background="@drawable/rounded_button"
             />
-
     </LinearLayout>
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/circleImageBack"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_baseline_arrow_back_ios_24"
+        android:layout_margin="15dp"
+        app:civ_circle_background_color="@color/white"
+        >
 
+    </de.hdodenhof.circleimageview.CircleImageView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
