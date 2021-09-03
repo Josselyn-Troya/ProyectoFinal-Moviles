@@ -1,5 +1,6 @@
 package com.example.socialmedia;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -8,7 +9,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -23,6 +28,7 @@ public class RegisterActivity2 extends AppCompatActivity {
     TextInputEditText mTexInputPassword;
     TextInputEditText mTexInputConfirmPassword;
     Button mButtonRegister;
+    FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +41,8 @@ public class RegisterActivity2 extends AppCompatActivity {
         mTexInputPassword = findViewById(R.id.textInputPassword);
         mTexInputConfirmPassword = findViewById(R.id.textInputConfirmPassword);
         mButtonRegister = findViewById(R.id.btnRegister);
+
+        mAuth = FirebaseAuth.getInstance();
 
 
         mButtonRegister.setOnClickListener(new View.OnClickListener() {
@@ -62,6 +70,15 @@ public class RegisterActivity2 extends AppCompatActivity {
         
         if (!username.isEmpty() && !email.isEmpty() && !password.isEmpty() && !confirmPassword.isEmpty()) {
             if (isEmailValid(email)){
+                if (password.equals(confirmPassword)){
+                    if (password.length()>=6){
+                        createUser(email, password);
+                    }else{
+                        Toast.makeText(this, "La contraseña debe tener al menos 6 caracteres", Toast.LENGTH_SHORT).show();
+                    }
+                }else{
+                    Toast.makeText(this, "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show();
+                }
             }else {
                 Toast.makeText(this, "El correo electronico no es valido", Toast.LENGTH_SHORT).show();
             }
@@ -69,6 +86,22 @@ public class RegisterActivity2 extends AppCompatActivity {
             Toast.makeText(this, "Debes completar todos los campos", Toast.LENGTH_SHORT).show();
         }
     }
+
+    private void createUser(String email, String password){
+        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()){
+                    Toast.makeText(RegisterActivity2.this, "El usuario se registro exitosamente", Toast.LENGTH_SHORT).show();
+
+                }else{
+                    Toast.makeText(RegisterActivity2.this, "No se pudo registrar el usuario", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        });
+    }
+
 
     public boolean isEmailValid(String email) {
         String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
