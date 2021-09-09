@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.socialmedia">
 
     <uses-feature
@@ -15,9 +16,11 @@
         android:label="Red Social"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.SocialMedia">
-        <activity android:name=".activities.PostDetailActivity"></activity>
-        <activity android:name=".activities.EditProfileActivity"></activity>
+        android:theme="@style/Theme.SocialMedia"
+        tools:replace="android:label">
+        <activity android:name=".activities.UserProfileActivity"></activity>
+        <activity android:name=".activities.PostDetailActivity" />
+        <activity android:name=".activities.EditProfileActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
