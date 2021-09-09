@@ -48,6 +48,35 @@
                 android:layout_marginRight="15dp"
                 />
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="35dp"
+                android:layout_marginLeft="15dp"
+                android:layout_gravity="bottom"
+                >
+
+                <TextView
+                    android:id="@+id/textViewRelativeTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Hace 0 min"
+                    android:textStyle="bold"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:id="@+id/textViewLikes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Likes"
+                    android:textStyle="italic"
+                    android:layout_marginTop="5dp"
+                    android:layout_gravity="bottom"
+                    android:textColor="@color/white" />
+
+            </LinearLayout>
+
         </FrameLayout>
 
         <androidx.cardview.widget.CardView
@@ -202,12 +231,11 @@
             android:layout_marginLeft="25dp"
             android:layout_marginRight="25dp"/>
 
-        <LinearLayout
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="15dp">
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:layout_marginTop="10dp">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewComments"
@@ -215,7 +243,7 @@
                 android:layout_height="match_parent"
                 />
 
-        </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
 
     </LinearLayout>
 
