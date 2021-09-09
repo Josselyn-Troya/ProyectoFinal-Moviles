@@ -21,6 +21,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -120,6 +121,7 @@ public class RegisterActivity2 extends AppCompatActivity {
                     user.setId(id);
                     user.setEmail(email);
                     user.setUsername(username);
+                    user.setTimestamp(new Date().getTime());
 
                     mUsersProvider.create(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override

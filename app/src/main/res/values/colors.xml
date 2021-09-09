@@ -13,6 +13,9 @@
     <color name="tres">#5E88FC</color>
     <color name="cuatro">#264E86</color>
 
+    <color name="gray">#D3D1D1</color>
+    <color name="grayL">#9A9696</color>
+
     <color name="trans">#00000000</color>
 
 </resources>

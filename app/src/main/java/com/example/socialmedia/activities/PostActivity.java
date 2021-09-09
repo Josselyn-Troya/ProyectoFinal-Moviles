@@ -63,8 +63,15 @@ public class PostActivity extends AppCompatActivity {
     ImageView mImageViewMusica;
 
     CircleImageView mCircleImageBack;
+    String mCategory = "";
 
+    String mTitle="";
+    String mDescription="";
+
+    AlertDialog mDialog;
     TextView mTextViewCategory;
+
+    AlertDialog.Builder mBuilderSelector;
     CharSequence options[];
     private final int GALLERY_REQUEST_CODE = 1;
     private final int GALLERY_REQUEST_CODE_2 = 2;
@@ -72,13 +79,6 @@ public class PostActivity extends AppCompatActivity {
     private final int PHOTO_REQUEST_CODE = 3;
     private final int PHOTO_REQUEST_CODE_2 = 4;
 
-    String mCategory = "";
-
-    String mTitle="";
-    String mDescription="";
-
-    AlertDialog mDialog;
-    AlertDialog.Builder mBuilderSelector;
 
     //foto 1
     String mAbsolutePhotoPath;
@@ -347,6 +347,7 @@ public class PostActivity extends AppCompatActivity {
                                                 post.setDescription(mDescription);
                                                 post.setCategory(mCategory);
                                                 post.setIdUser(mAuthProvider.getUid());
+                                                post.setTimestamp(new Date().getTime());
 
                                                 mPostProvider.save(post).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                     @Override

@@ -1,6 +1,7 @@
 package com.example.socialmedia.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +36,14 @@ public class PostsAdapter extends FirestoreRecyclerAdapter<Post, PostsAdapter.Vi
                 Picasso.with(context).load(post.getImage1()).into(holder.imageViewPost);
             }
         }
+        holder.viewHolder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, PostDetailActivity.class);
+                intent.putExtra("id", postId);
+                context.startActivity(intent);
+            }
+        });
     }
 
     @NotNull
@@ -50,12 +59,14 @@ public class PostsAdapter extends FirestoreRecyclerAdapter<Post, PostsAdapter.Vi
         TextView textViewTitle;
         TextView textViewDescription;
         ImageView imageViewPost;
+        View viewHolder;
 
         public ViewHolder(View view){
             super(view);
             textViewTitle = view.findViewById(R.id.textViewTitlePostCard);
             textViewDescription = view.findViewById(R.id.textViewDescriptionPostCard);
             imageViewPost = view.findViewById(R.id.imageViewPostCard);
+            viewHolder = view;
 
         }
     }
