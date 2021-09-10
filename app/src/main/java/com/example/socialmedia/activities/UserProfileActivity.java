@@ -7,6 +7,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -21,8 +22,10 @@ import com.example.socialmedia.models.Post;
 import com.example.socialmedia.providers.AuthProvider;
 import com.example.socialmedia.providers.PostProvider;
 import com.example.socialmedia.providers.UsersProvider;
+import com.example.socialmedia.utils.ViewedMessageHelper;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -44,6 +47,7 @@ public class UserProfileActivity extends AppCompatActivity {
     RecyclerView mRecyclerView;
 
     Toolbar mToolbar;
+    FloatingActionButton mFabChat;
 
 
     UsersProvider mUsersProvider;
@@ -68,6 +72,7 @@ public class UserProfileActivity extends AppCompatActivity {
         mCircleImageProfile = findViewById(R.id.circleImageProfile);
         mImageViewCover = findViewById(R.id.imageViewCover);
         mRecyclerView = findViewById(R.id.recyclerViewMyPost);
+        mFabChat = findViewById(R.id.fabChat);
 
         mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
@@ -84,10 +89,30 @@ public class UserProfileActivity extends AppCompatActivity {
 
         mExtraIdUser = getIntent().getStringExtra("idUser");
 
+        if (mAuthProvider.getUid().equals(mExtraIdUser)) {
+            mFabChat.setEnabled(false);
+        }
+
+        mFabChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goToChatActivity();
+            }
+        });
+
+
         getUser();
         getPostNumber();
         checkIfExistPost();
     }
+
+    private void goToChatActivity() {
+        Intent intent = new Intent(UserProfileActivity.this, ChatActivity.class);
+        intent.putExtra("idUser1", mAuthProvider.getUid());
+        intent.putExtra("idUser2", mExtraIdUser);
+        startActivity(intent);
+    }
+
 
     @Override
     public void onStart() {
@@ -100,12 +125,18 @@ public class UserProfileActivity extends AppCompatActivity {
         mAdapter = new MyPostsAdapter(options, UserProfileActivity.this);
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.startListening();
+        ViewedMessageHelper.updateOnline(true, UserProfileActivity.this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
         mAdapter.stopListening();
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ViewedMessageHelper.updateOnline(false, UserProfileActivity.this);
     }
 
     private void checkIfExistPost() {

@@ -36,6 +36,7 @@ import com.example.socialmedia.providers.PostProvider;
 import com.example.socialmedia.providers.TokenProvider;
 import com.example.socialmedia.providers.UsersProvider;
 import com.example.socialmedia.utils.RelativeTime;
+import com.example.socialmedia.utils.ViewedMessageHelper;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -182,12 +183,19 @@ public class PostDetailActivity extends AppCompatActivity {
         mAdapter = new CommentAdapter(options, PostDetailActivity.this);
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.startListening();
+        ViewedMessageHelper.updateOnline(true, PostDetailActivity.this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         mAdapter.stopListening();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ViewedMessageHelper.updateOnline(false, PostDetailActivity.this);
     }
 
 

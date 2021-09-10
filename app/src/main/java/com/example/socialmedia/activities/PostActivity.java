@@ -26,6 +26,7 @@ import com.example.socialmedia.providers.AuthProvider;
 import com.example.socialmedia.providers.ImageProvider;
 import com.example.socialmedia.providers.PostProvider;
 import com.example.socialmedia.utils.FileUtil;
+import com.example.socialmedia.utils.ViewedMessageHelper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -343,7 +344,7 @@ public class PostActivity extends AppCompatActivity {
                                                 Post post = new Post();
                                                 post.setImage1(url);
                                                 post.setImage2(url2);
-                                                post.setTitle(mTitle);
+                                                post.setTitle(mTitle.toLowerCase());
                                                 post.setDescription(mDescription);
                                                 post.setCategory(mCategory);
                                                 post.setIdUser(mAuthProvider.getUid());
@@ -450,5 +451,17 @@ public class PostActivity extends AppCompatActivity {
             Picasso.with(PostActivity.this).load(mPhotoPath2).into(mImageViewPost2);
         }
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        ViewedMessageHelper.updateOnline(true, PostActivity.this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ViewedMessageHelper.updateOnline(false, PostActivity.this);
     }
 }

@@ -25,6 +25,7 @@ import com.example.socialmedia.providers.AuthProvider;
 import com.example.socialmedia.providers.ImageProvider;
 import com.example.socialmedia.providers.UsersProvider;
 import com.example.socialmedia.utils.FileUtil;
+import com.example.socialmedia.utils.ViewedMessageHelper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -429,6 +430,19 @@ public class EditProfileActivity extends AppCompatActivity {
             Picasso.with(EditProfileActivity.this).load(mPhotoPath2).into(mImageViewCover);
         }
 
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        ViewedMessageHelper.updateOnline(true, EditProfileActivity.this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ViewedMessageHelper.updateOnline(false, EditProfileActivity.this);
     }
 
 }
