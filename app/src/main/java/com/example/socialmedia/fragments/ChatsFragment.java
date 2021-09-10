@@ -20,7 +20,7 @@ import com.google.firebase.firestore.Query;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link ChatsFragment#newInstance} factory method to
+ * Use the {@link ChatsFragment#} factory method to
  * create an instance of this fragment.
  */
 public class ChatsFragment extends Fragment {
@@ -43,7 +43,6 @@ public class ChatsFragment extends Fragment {
         // Inflate the layout for this fragment
         mView = inflater.inflate(R.layout.fragment_chats, container, false);
         mRecyclerView = mView.findViewById(R.id.recyclerViewChats);
-
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(linearLayoutManager);
 
@@ -71,4 +70,16 @@ public class ChatsFragment extends Fragment {
         super.onStop();
         mAdapter.stopListening();
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mAdapter.getListener() != null) {
+            mAdapter.getListener().remove();
+        }
+        if (mAdapter.getListenerLastMessage() != null) {
+            mAdapter.getListenerLastMessage().remove();
+        }
+    }
+
 }

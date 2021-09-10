@@ -75,11 +75,6 @@ public class HomeActivity extends AppCompatActivity {
                         openFragment(new ChatsFragment());
 
                     }
-                    else if (item.getItemId() == R.id.itemFilters) {
-                        // FRAGMENT FILTROS
-                        openFragment(new FiltersFragment());
-
-                    }
                     else if (item.getItemId() == R.id.itemProfile) {
                         // FRAGMENT PROFILE
                         openFragment(new ProfileFragment());

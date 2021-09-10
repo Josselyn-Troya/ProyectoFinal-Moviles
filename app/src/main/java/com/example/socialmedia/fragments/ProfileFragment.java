@@ -28,6 +28,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
@@ -36,7 +37,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link ProfileFragment#newInstance} factory method to
+ * Use the {@link ProfileFragment#} factory method to
  * create an instance of this fragment.
  */
 public class ProfileFragment extends Fragment {
@@ -44,19 +45,21 @@ public class ProfileFragment extends Fragment {
     View mView;
     LinearLayout mLinearLayoutEditProfile;
     TextView mTextViewUsername;
+    TextView mTextViewPhone;
     TextView mTextViewEmail;
     TextView mTextViewPostNumber;
+    TextView mTextViewPostExist;
     ImageView mImageViewCover;
     CircleImageView mCircleImageProfile;
     RecyclerView mRecyclerView;
-    TextView mTextViewPostExist;
-
 
     UsersProvider mUsersProvider;
     AuthProvider mAuthProvider;
     PostProvider mPostProvider;
 
     MyPostsAdapter mAdapter;
+
+    ListenerRegistration mListener;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -69,7 +72,6 @@ public class ProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         mView = inflater.inflate(R.layout.fragment_profile, container, false);
         mLinearLayoutEditProfile = mView.findViewById(R.id.linearLayoutEditProfile);
-
         mTextViewEmail = mView.findViewById(R.id.textViewEmail);
         mTextViewUsername = mView.findViewById(R.id.textViewUsername);
         mTextViewPostNumber = mView.findViewById(R.id.textViewPostNumber);
@@ -80,7 +82,6 @@ public class ProfileFragment extends Fragment {
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(linearLayoutManager);
-
 
         mLinearLayoutEditProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,18 +101,21 @@ public class ProfileFragment extends Fragment {
     }
 
     private void checkIfExistPost() {
-        mPostProvider.getPostByUser(mAuthProvider.getUid()).addSnapshotListener(new EventListener<QuerySnapshot>() {
+        mListener = mPostProvider.getPostByUser(mAuthProvider.getUid()).addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                int numberPost = queryDocumentSnapshots.size();
-                if (numberPost > 0) {
-                    mTextViewPostExist.setText("Publicaciones");
+                if (queryDocumentSnapshots != null){
+                    int numberPost = queryDocumentSnapshots.size();
+                    if (numberPost > 0) {
+                        mTextViewPostExist.setText("Publicaciones");
+                        mTextViewPostExist.setTextColor(Color.RED);
+                    }
+                    else {
+                        mTextViewPostExist.setText("No hay publicaciones");
+                        mTextViewPostExist.setTextColor(Color.GRAY);
+                    }
+                }
 
-                }
-                else {
-                    mTextViewPostExist.setText("No hay publicaciones");
-                    mTextViewPostExist.setTextColor(Color.GRAY);
-                }
             }
         });
     }
@@ -135,6 +139,13 @@ public class ProfileFragment extends Fragment {
         mAdapter.stopListening();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mListener != null){
+            mListener.remove();
+        }
+    }
 
     private void goToEditProfile() {
         Intent intent = new Intent(getContext(), EditProfileActivity.class);
@@ -162,7 +173,7 @@ public class ProfileFragment extends Fragment {
                     }
                     if (documentSnapshot.contains("username")) {
                         String username = documentSnapshot.getString("username");
-                        mTextViewUsername.setText(username);
+                        mTextViewUsername.setText(username.toUpperCase());
                     }
                     if (documentSnapshot.contains("image_profile")) {
                         String imageProfile = documentSnapshot.getString("image_profile");
@@ -184,5 +195,4 @@ public class ProfileFragment extends Fragment {
             }
         });
     }
-
 }

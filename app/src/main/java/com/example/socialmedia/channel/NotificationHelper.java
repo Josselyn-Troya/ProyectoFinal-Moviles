@@ -5,17 +5,23 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.Person;
+import androidx.core.graphics.drawable.IconCompat;
 
 import com.example.socialmedia.R;
+import com.example.socialmedia.models.Message;
+
+import java.util.Date;
 
 public class NotificationHelper extends ContextWrapper {
 
-    private static final String CHANNEL_ID = "com.optic.socialmedia";
+    private static final String CHANNEL_ID = "com.optic.socialmediagamer";
     private static final String CHANNEL_NAME = "SocialMediaGamer";
 
     private NotificationManager manager;
@@ -56,6 +62,46 @@ public class NotificationHelper extends ContextWrapper {
                 .setColor(Color.GRAY)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(body).setBigContentTitle(title));
+    }
+
+    public NotificationCompat.Builder getNotificationMessage(
+            Message[] messages,
+            String usernameSender,
+            String usernameReceiver,
+            String lastMessage,
+            Bitmap bitmapSender,
+            Bitmap bitmapReceiver) {
+
+        Person person1 = new Person.Builder()
+                .setName(usernameReceiver)
+                .setIcon(IconCompat.createWithBitmap(bitmapReceiver))
+                .build();
+
+        Person person2 = new Person.Builder()
+                .setName(usernameSender)
+                .setIcon(IconCompat.createWithBitmap(bitmapSender))
+                .build();
+
+        NotificationCompat.MessagingStyle messagingStyle = new NotificationCompat.MessagingStyle(person1);
+        NotificationCompat.MessagingStyle.Message message1 = new
+                NotificationCompat.MessagingStyle.Message(
+                lastMessage,
+                new Date().getTime(),
+                person1);
+        messagingStyle.addMessage(message1);
+
+        for (Message m: messages) {
+            NotificationCompat.MessagingStyle.Message message2 = new
+                    NotificationCompat.MessagingStyle.Message(
+                    m.getMessage(),
+                    m.getTimestamp(),
+                    person2);
+            messagingStyle.addMessage(message2);
+        }
+
+        return new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setStyle(messagingStyle);
     }
 }
 

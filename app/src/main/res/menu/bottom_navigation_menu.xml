@@ -5,10 +5,6 @@
         android:icon="@drawable/ic_home"
         android:title="Inicio" />
     <item
-        android:id="@+id/itemFilters"
-        android:icon="@drawable/ic_filter"
-        android:title="Filtros" />
-    <item
         android:id="@+id/itemChats"
         android:icon="@drawable/ic_chat"
         android:title="Chats" />
