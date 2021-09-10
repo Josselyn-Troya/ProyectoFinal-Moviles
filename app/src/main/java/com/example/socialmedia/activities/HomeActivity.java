@@ -13,12 +13,17 @@ import com.example.socialmedia.fragments.ChatsFragment;
 import com.example.socialmedia.fragments.FiltersFragment;
 import com.example.socialmedia.fragments.HomeFragment;
 import com.example.socialmedia.fragments.ProfileFragment;
+import com.example.socialmedia.providers.AuthProvider;
+import com.example.socialmedia.providers.TokenProvider;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationBarView;
 
 public class HomeActivity extends AppCompatActivity {
 
     BottomNavigationView bottomNavigation;
+
+    TokenProvider mTokenProvider;
+    AuthProvider mAuthProvider;
+
 
 
     @Override
@@ -28,7 +33,12 @@ public class HomeActivity extends AppCompatActivity {
 
         bottomNavigation = findViewById(R.id.bottom_navigation);
         bottomNavigation.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
+
+        mTokenProvider = new TokenProvider();
+        mAuthProvider = new AuthProvider();
+
         openFragment(new HomeFragment());
+        createToken();
     }
 
     public void openFragment(Fragment fragment) {
@@ -63,4 +73,7 @@ public class HomeActivity extends AppCompatActivity {
                     return true;
                 }
             };
+    private void createToken() {
+        mTokenProvider.create(mAuthProvider.getUid());
+    }
 }

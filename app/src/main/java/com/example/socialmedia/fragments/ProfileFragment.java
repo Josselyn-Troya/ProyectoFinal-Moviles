@@ -1,9 +1,13 @@
 package com.example.socialmedia.fragments;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,11 +18,17 @@ import android.widget.TextView;
 
 import com.example.socialmedia.R;
 import com.example.socialmedia.activities.EditProfileActivity;
+import com.example.socialmedia.adapters.MyPostsAdapter;
+import com.example.socialmedia.models.Post;
 import com.example.socialmedia.providers.AuthProvider;
 import com.example.socialmedia.providers.PostProvider;
 import com.example.socialmedia.providers.UsersProvider;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
@@ -38,11 +48,15 @@ public class ProfileFragment extends Fragment {
     TextView mTextViewPostNumber;
     ImageView mImageViewCover;
     CircleImageView mCircleImageProfile;
+    RecyclerView mRecyclerView;
+    TextView mTextViewPostExist;
 
 
     UsersProvider mUsersProvider;
     AuthProvider mAuthProvider;
     PostProvider mPostProvider;
+
+    MyPostsAdapter mAdapter;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -59,8 +73,13 @@ public class ProfileFragment extends Fragment {
         mTextViewEmail = mView.findViewById(R.id.textViewEmail);
         mTextViewUsername = mView.findViewById(R.id.textViewUsername);
         mTextViewPostNumber = mView.findViewById(R.id.textViewPostNumber);
+        mTextViewPostExist = mView.findViewById(R.id.textViewPostExist);
         mCircleImageProfile = mView.findViewById(R.id.circleImageProfile);
         mImageViewCover = mView.findViewById(R.id.imageViewCover);
+        mRecyclerView = mView.findViewById(R.id.recyclerViewMyPost);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        mRecyclerView.setLayoutManager(linearLayoutManager);
 
 
         mLinearLayoutEditProfile.setOnClickListener(new View.OnClickListener() {
@@ -76,8 +95,46 @@ public class ProfileFragment extends Fragment {
 
         getUser();
         getPostNumber();
+        checkIfExistPost();
         return mView;
     }
+
+    private void checkIfExistPost() {
+        mPostProvider.getPostByUser(mAuthProvider.getUid()).addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                int numberPost = queryDocumentSnapshots.size();
+                if (numberPost > 0) {
+                    mTextViewPostExist.setText("Publicaciones");
+
+                }
+                else {
+                    mTextViewPostExist.setText("No hay publicaciones");
+                    mTextViewPostExist.setTextColor(Color.GRAY);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Query query = mPostProvider.getPostByUser(mAuthProvider.getUid());
+        FirestoreRecyclerOptions<Post> options =
+                new FirestoreRecyclerOptions.Builder<Post>()
+                        .setQuery(query, Post.class)
+                        .build();
+        mAdapter = new MyPostsAdapter(options, getContext());
+        mRecyclerView.setAdapter(mAdapter);
+        mAdapter.startListening();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mAdapter.stopListening();
+    }
+
 
     private void goToEditProfile() {
         Intent intent = new Intent(getContext(), EditProfileActivity.class);

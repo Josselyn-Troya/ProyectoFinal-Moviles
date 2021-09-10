@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,8 +8,25 @@
     tools:context=".fragments.HomeFragment"
     android:layout_marginBottom="50dp">
 
-    <include layout="@layout/action_bar_toolbar" />
-    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.mancj.materialsearchbar.MaterialSearchBar
+            style="@style/MaterialSearchBarLight"
+            app:mt_hint="Texto de busqueda"
+            app:mt_placeholder="Buscar"
+            app:mt_maxSuggestionsCount="10"
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mt_menuIconTint="@color/gray"
+            app:mt_clearIconTint="@color/gray"
+            android:id="@+id/searchBar" />
+
+    </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -35,5 +53,7 @@
         >
 
     </com.google.android.material.floatingactionbutton.FloatingActionButton>
+
+
 
 </FrameLayout>
